@@ -1,32 +1,42 @@
 import postgres from 'postgres';
 
-const connectionString = process.env.DATABASE_URL;
+let sql: ReturnType<typeof postgres> | null = null;
 
-if (!connectionString) {
-  throw new Error(
-    'DATABASE_URL environment variable is not set. Please add it to .env.local'
-  );
+function getSql() {
+  if (sql) {
+    return sql;
+  }
+
+  const connectionString = process.env.DATABASE_URL;
+
+  if (!connectionString) {
+    throw new Error(
+      'DATABASE_URL environment variable is not set. Please add it to .env.local or configure Neon integration in Vercel.'
+    );
+  }
+
+  // Create postgres client with Neon-optimized configuration
+  // - connect_timeout: 60s allows Neon compute to wake up (cold starts take 1-3s)
+  // - idle_timeout: 20s closes unused connections to prevent pool exhaustion
+  // - max_lifetime: 30 minutes for connection reuse
+  // - max: 5 connections for serverless environment
+  sql = postgres(connectionString, {
+    ssl: 'require',
+    connect_timeout: 60,
+    idle_timeout: 20,
+    max_lifetime: 60 * 30,
+    max: 5,
+  });
+
+  return sql;
 }
-
-// Create postgres client with Neon-optimized configuration
-// - connect_timeout: 60s allows Neon compute to wake up (cold starts take 1-3s)
-// - idle_timeout: 20s closes unused connections to prevent pool exhaustion
-// - max_lifetime: 30 minutes for connection reuse
-// - max: 5 connections for serverless environment
-export const sql = postgres(connectionString, {
-  ssl: 'require',
-  connect_timeout: 60,
-  idle_timeout: 20,
-  max_lifetime: 60 * 30,
-  max: 5,
-});
 
 // Helper functions for database queries
 // Note: PostgreSQL returns lowercase column names, so we map them to camelCase
 export const db = {
   users: {
     findByCustomerId: async (customerId: string) => {
-      const result = await sql`
+      const result = await getSql()`
         SELECT id, customerid, name, email, createdat
         FROM users
         WHERE customerid = ${customerId}
@@ -44,21 +54,21 @@ export const db = {
   },
   orders: {
     findByOrderId: async (orderId: string) => {
-      const result = await sql`
+      const result = await getSql()`
         SELECT * FROM orders WHERE orderid = ${orderId}
       `;
       if (!result[0]) return null;
       return mapOrderRow(result[0]);
     },
     findByCustomerId: async (customerId: string) => {
-      const result = await sql`
+      const result = await getSql()`
         SELECT * FROM orders WHERE customerid = ${customerId}
         ORDER BY orderdate DESC
       `;
       return result.map(mapOrderRow);
     },
     updateStatus: async (orderId: string, status: string) => {
-      const result = await sql`
+      const result = await getSql()`
         UPDATE orders
         SET status = ${status}
         WHERE orderid = ${orderId}
