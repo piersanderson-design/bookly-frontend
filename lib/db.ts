@@ -19,7 +19,6 @@ export const sql = postgres(connectionString, {
   idle_timeout: 20,
   max_lifetime: 60 * 30,
   max: 5,
-  application_name: 'bookly-frontend',
 });
 
 // Helper functions for database queries
