@@ -18,7 +18,7 @@ import {
   PromptInputTextarea,
   PromptInputSubmit,
 } from "@/components/ai-elements/prompt-input";
-import { MessageSquare } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { useState } from "react";
 import { useChat } from "@ai-sdk/react";
 
@@ -40,9 +40,9 @@ const ConversationDemo = () => {
           <ConversationContent>
             {messages.length === 0 ? (
               <ConversationEmptyState
-                icon={<MessageSquare className="size-12" />}
-                title="Start a conversation"
-                description="Type a message below to begin chatting"
+                icon={<BookOpen className="size-12" />}
+                title="Welcome to Bookly Customer Support"
+                description="Hi there! I'm your Bookly customer service assistant. I'm here to help with order status, shipping information, refunds and returns, password resets, and any other questions about your Bookly account. Just ask away!"
               />
             ) : (
               messages.map((message) => (
