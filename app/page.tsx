@@ -35,13 +35,14 @@ const ConversationDemo = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="max-w-4xl w-full rounded-lg border h-[600px]">
+      <div className="max-w-4xl w-full rounded-lg border h-[600px] p-6">
         <div className="flex flex-col h-full">
           {/* Header Section */}
           <div className="flex items-center gap-3 pb-4 border-b mb-4">
             {/* Logo Placeholder */}
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
-              {<img src="/bookly-logo.svg" alt="Logo" className="w-10 h-10" />}
+              {/* Replace with: <img src="/logo.png" alt="Logo" className="w-10 h-10" /> */}
+              BK
             </div>
 
             {/* Header Text */}
