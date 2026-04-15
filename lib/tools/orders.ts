@@ -97,6 +97,10 @@ export const processRefundRequest = tool({
       );
       console.log(`[processRefundRequest] Update successful`);
 
+      if (!updatedOrder) {
+        return `Failed to update order status for "${orderId}".`;
+      }
+
       const processedAt = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 
       return `Refund Request Approved!\nOrder: ${orderId}\nReason: ${reason}\nNew Status: ${updatedOrder.status}\nProcessed: ${processedAt}\n\nYour refund will be processed within 5-7 business days.`;
