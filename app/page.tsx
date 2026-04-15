@@ -59,7 +59,7 @@ const ConversationDemo = () => {
           <ConversationContent>
             {messages.length === 0 ? (
               <ConversationEmptyState
-                icon={<BookOpen className="size-12" />}
+                icon={<BookOpen className="size-12 text-purple-600" />}
                 title="Welcome to Bookly Customer Support"
                 description="Hi there! I'm your Bookly customer service assistant. I'm here to help with order status, shipping information, refunds and returns, password resets, and any other questions about your Bookly account. Just ask away!"
               />
@@ -120,7 +120,7 @@ const ConversationDemo = () => {
           <PromptInputSubmit
             status={status === "streaming" ? "streaming" : "ready"}
             disabled={!input.trim()}
-            className="absolute bottom-1 right-1"
+            className="absolute bottom-1 right-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded hover:from-blue-600 hover:to-purple-700 transition-all"
           />
         </PromptInput>
       </div>
