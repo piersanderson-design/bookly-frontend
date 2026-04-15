@@ -49,17 +49,39 @@ const ConversationDemo = () => {
                 <Message from={message.role} key={message.id}>
                   <MessageContent>
                     {message.parts.map((part, i) => {
-                      switch (part.type) {
-                        case "text": // we don't use any reasoning or tool calls in this example
-                          return (
-                            <MessageResponse key={`${message.id}-${i}`}>
-                              {part.text}
-                            </MessageResponse>
-                          );
-                        default:
-                          return null;
-                      }
-                    })}
+                       switch (part.type) {
+                         case "text":
+                           const textPart = part as any;
+                           return (
+                             <MessageResponse key={`${message.id}-${i}`}>
+                               {textPart.text}
+                             </MessageResponse>
+                           );
+                         case "step-start":
+                           // Don't render step markers
+                           return null;
+                         default:
+                           // Handle tool parts
+                           const toolPart = part as any;
+                           if (toolPart.state === "output-available" && toolPart.output) {
+                             return (
+                               <div
+                                 key={`${message.id}-${i}`}
+                                 className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg my-2 border border-blue-200 dark:border-blue-800"
+                               >
+                                 <p className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2">
+                                   {toolPart.toolName}
+                                 </p>
+                                 <div className="text-sm text-blue-800 dark:text-blue-200 whitespace-pre-wrap">
+                                   {typeof toolPart.output === 'string' ? toolPart.output : JSON.stringify(toolPart.output, null, 2)}
+                                 </div>
+                               </div>
+                             );
+                           }
+                           // Don't render tool parts that aren't complete yet
+                           return null;
+                       }
+                     })}
                   </MessageContent>
                 </Message>
               ))
