@@ -21,10 +21,16 @@ import {
 import { BookOpen } from "lucide-react";
 import { useState } from "react";
 import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport, TextStreamChatTransport, TextStreamPart } from 'ai';
 
 const ConversationDemo = () => {
   const [input, setInput] = useState("");
-  const { messages, sendMessage, status } = useChat();
+  const { messages, sendMessage, status } = useChat({
+    transport: new DefaultChatTransport({
+      api: '/api/chat',  // Calls the Next.js App Route above
+    })
+  });
+
 
   const handleSubmit = (message: PromptInputMessage) => {
     if (message.text.trim()) {
