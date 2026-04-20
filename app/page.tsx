@@ -27,7 +27,7 @@ const ConversationDemo = () => {
   const [input, setInput] = useState("");
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
-      api: '/api/chat',  // Calls the Next.js App Route above
+      api: 'https://bookly-backend-vercel.vercel.app/chat',  // Calls the Next.js App Route above
     })
   });
 
